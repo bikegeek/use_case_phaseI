@@ -1,0 +1,185 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// Point-Stat configuration file.
+//
+// For additional information, see the MET_BASE/config/README file.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Output model name to be written
+//
+model = "${model_fcst_now}";
+
+//
+// Output description to be written
+// May be set separately in each "obs.field" entry
+//
+desc = "NA";
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Verification grid
+//
+regrid = {
+   to_grid    = "${conus_sfc_GGG}" ;
+   method     = BILIN;
+   width      = 2;
+   vld_thresh = 0.5;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+cat_thresh  = [ NA ];
+cnt_thresh  = [ NA ];
+cnt_logic   = UNION;
+wind_thresh = [ NA ];
+wind_logic  = UNION;
+
+//
+// Forecast and observation fields to be verified
+//
+fcst = {
+   field = [
+      { name  = "TMP"; level = [ "Z2" ]; },
+      { name  = "RH"; level = [ "Z2" ]; },
+      { name = "DPT"; level = [ "Z2" ]; },
+      { name  = "UGRD"; level = [ "Z10" ]; },
+      { name  = "VGRD"; level = [ "Z10" ]; },
+      { name = "TCDC"; level = [ "L0" ]; GRIB_lvl_typ = 200; },
+      { name = "PRMSL"; level = [ "Z0" ]; }
+   ];
+
+}
+obs = fcst;
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Point observation filtering options
+// May be set separately in each "obs.field" entry
+//
+message_type   = [ "ONLYSF" ];
+sid_exc        = [];
+obs_quality    = [];
+duplicate_flag = NONE;
+obs_summary    = NONE;
+obs_perc_value = 50;
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Climatology mean data
+//
+climo_mean = {
+
+   file_name = [];
+   field     = [];
+
+   regrid = {
+      method     = NEAREST;
+      width      = 1;
+      vld_thresh = 0.5;
+   }
+
+   time_interp_method = DW_MEAN;
+   match_day          = FALSE;
+   time_step          = 21600;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Point observation time window
+//
+obs_window = {
+   beg = -4500;
+   end =  4500;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Verification masking regions
+//
+mask = {
+   grid    = [ "FULL" ];
+   poly    = [ ${conus_sfc_regions_config} ];
+   sid     = [];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Confidence interval settings
+//
+ci_alpha  = [ 0.05 ];
+
+boot = {
+   interval = PCTILE;
+   rep_prop = 1.0;
+   n_rep    = 0;
+   rng      = "mt19937";
+   seed     = "";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Interpolation methods
+//
+interp = {
+   vld_thresh = 1.0;
+
+   type = [
+      {
+         method = BILIN;
+         width  = 2;
+      }
+   ];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// HiRA verification method
+//
+hira = {
+   flag       = FALSE;
+   width      = [ 2, 3, 4, 5 ];
+   vld_thresh = 1.0;
+   cov_thresh = [ ==0.25 ];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// Statistical output types
+//
+output_flag = {
+   fho    = NONE;
+   ctc    = NONE;
+   cts    = NONE;
+   mctc   = NONE;
+   mcts   = NONE;
+   cnt    = NONE;
+   sl1l2  = STAT;
+   sal1l2 = NONE;
+   vl1l2  = NONE;
+   val1l2 = NONE;
+   pct    = NONE;
+   pstd   = NONE;
+   pjc    = NONE;
+   prc    = NONE;
+   mpr    = NONE;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+rank_corr_flag = FALSE;
+tmp_dir        = "/tmp";
+output_prefix  = "";
+version        = "V6.0";
+
+////////////////////////////////////////////////////////////////////////////////
